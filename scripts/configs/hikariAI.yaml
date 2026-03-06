@@ -1,0 +1,32 @@
+# Dataset Generation Configuration for hikariAI
+# 
+# This config automates generation of 200 images for later curation to 30-40
+# Uses sequential execution to manage RAM usage
+
+character:
+  name: "hikariAI"
+  output_dir: "output/hikariAI"
+  
+generation:
+  # Total images to generate (will be curated down to 30-40 later)
+  total_images: 200
+  
+  # Images per API call (batch size in workflow)
+  batch_size: 2
+  
+  # Distribution following the 40/40/20 rule
+  distribution:
+    portrait: 80   # 40% - Face consistency is critical
+    standing: 80   # 40% - Show outfit details
+    action: 40     # 20% - Environmental context
+  
+workflows:
+  # Path to workflow JSON files (relative to ComfyUI root)
+  portrait: "user/default/workflows/hikariAI_portrait_animagine.json"
+  standing: "user/default/workflows/hikariAI_standing_animagine.json"
+  action: "user/default/workflows/hikariAI_action_animagine.json"
+
+comfyui:
+  host: "127.0.0.1"
+  port: 8188
+  check_interval: 5  # Seconds between status checks

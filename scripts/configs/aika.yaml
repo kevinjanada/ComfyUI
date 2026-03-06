@@ -1,0 +1,27 @@
+# Dataset Generation Configuration for Aika
+# 
+# Anime-style crypto analyst character
+# Generates 200 images for later curation to 30-40
+
+character:
+  name: "aika"
+  output_dir: "output/aika"
+  
+generation:
+  total_images: 200
+  batch_size: 2
+  
+  distribution:
+    portrait: 80   # 40%
+    standing: 80   # 40%
+    action: 40     # 20%
+  
+workflows:
+  portrait: "user/default/workflows/aika_portrait_animagine.json"
+  standing: "user/default/workflows/aika_standing_animagine.json"
+  action: "user/default/workflows/aika_action_animagine.json"
+
+comfyui:
+  host: "127.0.0.1"
+  port: 8188
+  check_interval: 5

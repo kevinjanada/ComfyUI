@@ -1,0 +1,135 @@
+{
+  "last_node_id": 20,
+  "last_link_id": 25,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [50, 200],
+      "size": [350, 100],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "MODEL", "type": "MODEL", "links": [1], "slot_index": 0},
+        {"name": "CLIP", "type": "CLIP", "links": [2, 3], "slot_index": 1},
+        {"name": "VAE", "type": "VAE", "links": [9], "slot_index": 2}
+      ],
+      "widgets_values": ["Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"],
+      "title": "Juggernaut XL v9 Model"
+    },
+    {
+      "id": 2,
+      "type": "CLIPTextEncode",
+      "pos": [450, 150],
+      "size": [450, 200],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [{"name": "clip", "type": "CLIP", "link": 2}],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [4], "slot_index": 0}],
+      "widgets_values": ["(lunaAI:1.2), blockchain developer, (long dark blue hair with glowing cyan tips:1.1), (electric purple eyes with digital patterns:1.1), angular focused face, (data visor with holographic cyan interface:1.1), high-tech jacket with LED panels BREAK portrait shot, minimal background, looking at camera, cool purple and cyan neon lighting, stylized 3D fintech character, highly detailed, sharp focus, professional 3D render"],
+      "title": "LUNA - Portrait Prompt"
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [450, 400],
+      "size": [450, 200],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [{"name": "clip", "type": "CLIP", "link": 3}],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [5], "slot_index": 0}],
+      "widgets_values": ["low quality, blurry, distorted face, bad anatomy, bad hands, extra fingers, deformed, ugly, duplicate body parts, multiple characters, 2d, flat, painting, drawing, sketch, photorealistic, realistic, oil painting, watercolor, illustration, anime style, manga, cel shaded, inconsistent lighting, asymmetric eyes, disfigured, mutated, poorly drawn face, poorly drawn hands, missing fingers, extra limbs, fused fingers, too many fingers, long neck, cross-eyed, text, watermark, logo, signature"],
+      "title": "Negative Prompt (Enhanced)"
+    },
+    {
+      "id": 4,
+      "type": "EmptyLatentImage",
+      "pos": [50, 450],
+      "size": [350, 110],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "LATENT", "type": "LATENT", "links": [6], "slot_index": 0}],
+      "widgets_values": [1024, 1024, 2],
+      "title": "Batch Size: 2 Images"
+    },
+    {
+      "id": 5,
+      "type": "KSampler",
+      "pos": [950, 250],
+      "size": [320, 470],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"name": "model", "type": "MODEL", "link": 1},
+        {"name": "positive", "type": "CONDITIONING", "link": 4},
+        {"name": "negative", "type": "CONDITIONING", "link": 5},
+        {"name": "latent_image", "type": "LATENT", "link": 6}
+      ],
+      "outputs": [{"name": "LATENT", "type": "LATENT", "links": [7], "slot_index": 0}],
+      "widgets_values": [-1, "randomize", 35, 7, "dpmpp_2m", "karras", 1],
+      "title": "Generate (Steps:35, CFG:7, Seed:-1)"
+    },
+    {
+      "id": 6,
+      "type": "VAEDecode",
+      "pos": [1350, 250],
+      "size": [210, 50],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "samples", "type": "LATENT", "link": 7},
+        {"name": "vae", "type": "VAE", "link": 9}
+      ],
+      "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [8], "slot_index": 0}],
+      "title": "VAE Decode (Built-in)"
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [1650, 250],
+      "size": [350, 300],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [{"name": "images", "type": "IMAGE", "link": 8}],
+      "widgets_values": ["luna_portrait_juggernaut"],
+      "title": "Save Images"
+    },
+    {
+      "id": 10,
+      "type": "Note",
+      "pos": [50, 50],
+      "size": [400, 160],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "widgets_values": ["LUNA - Portrait - Juggernaut XL v9\\n\\nSettings: Steps:35 | CFG:7 | Seed:-1\\nBatch: 2 images | Priority: HIGHEST\\n\\nGenerate: 12-16 images (40% of dataset)\\n\\nReferences:\\n- Skill: SKILLS/JUGGERNAUT_CHARACTER_SKILL.md\\n- Templates: SKILLS/PROMPT_TEMPLATES.md\\n- Validation: SKILLS/VALIDATION_GUIDE.md\\n- Spec: SKILLS/examples/luna/luna_spec.md"],
+      "title": "Workflow Info"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 5, 0, "MODEL"],
+    [2, 1, 1, 2, 0, "CLIP"],
+    [3, 1, 1, 3, 0, "CLIP"],
+    [4, 2, 0, 5, 1, "CONDITIONING"],
+    [5, 3, 0, 5, 2, "CONDITIONING"],
+    [6, 4, 0, 5, 3, "LATENT"],
+    [7, 5, 0, 6, 0, "LATENT"],
+    [8, 6, 0, 7, 0, "IMAGE"],
+    [9, 1, 2, 6, 1, "VAE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
